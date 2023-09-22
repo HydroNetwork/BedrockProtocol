@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol\types\recipe;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 
 final class IntIdMetaItemDescriptor implements ItemDescriptor{
 	use GetTypeIdFromConstTrait;

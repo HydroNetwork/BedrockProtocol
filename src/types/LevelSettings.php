@@ -31,6 +31,7 @@ final class LevelSettings{
 	public int $editorWorldType = EditorWorldType::NON_EDITOR;
 	public bool $createdInEditorMode = false;
 	public bool $exportedFromEditorMode = false;
+	public bool $isEditorMode = false;
 	public int $time = -1;
 	public int $eduEditionOffer = EducationEditionOffer::NONE;
 	public bool $hasEduFeaturesEnabled = false;
@@ -103,7 +104,7 @@ final class LevelSettings{
 		$this->difficulty = $in->getVarInt();
 		$this->spawnPosition = $in->getBlockPosition();
 		$this->hasAchievementsDisabled = $in->getBool();
-        if($in->getProtocolId >= ProtocolInfo::PROTOCOL_1_20_30){
+        if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_20_30){
             $this->editorWorldType = $in->getVarInt();
         } else {
             $this->editorWorldType = ($in->getBool() ? EditorWorldType::PROJECT : EditorWorldType::NON_EDITOR);
@@ -174,15 +175,11 @@ final class LevelSettings{
 		$out->putVarInt($this->difficulty);
 		$out->putBlockPosition($this->spawnPosition);
 		$out->putBool($this->hasAchievementsDisabled);
-<<<<<<< HEAD
 		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_20_30){
 			$out->putVarInt($this->editorWorldType);
 		}else{
 			$out->putBool($this->editorWorldType !== EditorWorldType::NON_EDITOR);
 		}
-		$out->putBool($this->createdInEditorMode);
-		$out->putBool($this->exportedFromEditorMode);
-=======
 		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_10){
 			$out->putBool($this->isEditorMode);
 		}
@@ -190,7 +187,6 @@ final class LevelSettings{
 			$out->putBool($this->createdInEditorMode);
 			$out->putBool($this->exportedFromEditorMode);
 		}
->>>>>>> parent of 76dbfac (Remove < 1.20.0 due to mojang breaking it)
 		$out->putVarInt($this->time);
 		$out->putVarInt($this->eduEditionOffer);
 		$out->putBool($this->hasEduFeaturesEnabled);

@@ -54,6 +54,7 @@ use pocketmine\network\mcpe\protocol\types\skin\SkinData;
 use pocketmine\network\mcpe\protocol\types\skin\SkinImage;
 use pocketmine\network\mcpe\protocol\types\StructureEditorData;
 use pocketmine\network\mcpe\protocol\types\StructureSettings;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\utils\Binary;
 use pocketmine\utils\BinaryDataException;
 use pocketmine\utils\BinaryStream;
@@ -798,13 +799,8 @@ class PacketSerializer extends BinaryStream{
 		$result->showBoundingBox = $this->getBool();
 
 		$result->structureBlockType = $this->getVarInt();
-<<<<<<< HEAD
-		$result->structureSettings = $this->getStructureSettings();
-		$result->structureRedstoneSaveMode = $this->getVarInt();
-=======
 		$result->structureSettings = $this->getStructureSettings($protocolId);
 		$result->structureRedstoneSaveMove = $this->getVarInt();
->>>>>>> parent of 76dbfac (Remove < 1.20.0 due to mojang breaking it)
 
 		return $result;
 	}
@@ -817,13 +813,8 @@ class PacketSerializer extends BinaryStream{
 		$this->putBool($structureEditorData->showBoundingBox);
 
 		$this->putVarInt($structureEditorData->structureBlockType);
-<<<<<<< HEAD
-		$this->putStructureSettings($structureEditorData->structureSettings);
-		$this->putVarInt($structureEditorData->structureRedstoneSaveMode);
-=======
 		$this->putStructureSettings($structureEditorData->structureSettings, $protocolId);
 		$this->putVarInt($structureEditorData->structureRedstoneSaveMove);
->>>>>>> parent of 76dbfac (Remove < 1.20.0 due to mojang breaking it)
 	}
 
 	public function getNbtRoot() : TreeRoot{
