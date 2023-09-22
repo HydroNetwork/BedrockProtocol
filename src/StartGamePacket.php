@@ -181,12 +181,22 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$this->multiplayerCorrelationId = $in->getString();
 		$this->enableNewInventorySystem = $in->getBool();
 		$this->serverSoftwareVersion = $in->getString();
-		$this->playerActorProperties = new CacheableNbt($in->getNbtCompoundRoot());
-		$this->blockPaletteChecksum = $in->getLLong();
-		$this->worldTemplateId = $in->getUUID();
-		$this->enableClientSideChunkGeneration = $in->getBool();
-		$this->blockNetworkIdsAreHashes = $in->getBool();
-		$this->networkPermissions = NetworkPermissions::decode($in);
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_0){
+			$this->playerActorProperties = new CacheableNbt($in->getNbtCompoundRoot());
+			$this->blockPaletteChecksum = $in->getLLong();
+			$this->worldTemplateId = $in->getUUID();
+		}else{
+			$this->blockPaletteChecksum = $in->getLLong();
+		}
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_20){
+			$this->enableClientSideChunkGeneration = $in->getBool();
+		}
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_80){
+			$this->blockNetworkIdsAreHashes = $in->getBool();
+		}
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_20_0){
+			$this->networkPermissions = NetworkPermissions::decode($in);
+		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -226,12 +236,22 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$out->putString($this->multiplayerCorrelationId);
 		$out->putBool($this->enableNewInventorySystem);
 		$out->putString($this->serverSoftwareVersion);
-		$out->put($this->playerActorProperties->getEncodedNbt());
-		$out->putLLong($this->blockPaletteChecksum);
-		$out->putUUID($this->worldTemplateId);
-		$out->putBool($this->enableClientSideChunkGeneration);
-		$out->putBool($this->blockNetworkIdsAreHashes);
-		$this->networkPermissions->encode($out);
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_0){
+			$out->put($this->playerActorProperties->getEncodedNbt());
+			$out->putLLong($this->blockPaletteChecksum);
+			$out->putUUID($this->worldTemplateId);
+		}else{
+			$out->putLLong($this->blockPaletteChecksum);
+		}
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_20){
+			$out->putBool($this->enableClientSideChunkGeneration);
+		}
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_80){
+			$out->putBool($this->blockNetworkIdsAreHashes);
+		}
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_20_0) {
+			$this->networkPermissions->encode($out);
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

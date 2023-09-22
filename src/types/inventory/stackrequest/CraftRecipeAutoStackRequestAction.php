@@ -52,8 +52,10 @@ final class CraftRecipeAutoStackRequestAction extends ItemStackRequestAction{
 		$recipeId = $in->readGenericTypeNetworkId();
 		$repetitions = $in->getByte();
 		$ingredients = [];
-		for($i = 0, $count = $in->getByte(); $i < $count; ++$i){
-			$ingredients[] = $in->getRecipeIngredient();
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_40){
+			for($i = 0, $count = $in->getByte(); $i < $count; ++$i){
+				$ingredients[] = $in->getRecipeIngredient();
+			}
 		}
 		return new self($recipeId, $repetitions, $ingredients);
 	}
@@ -61,9 +63,11 @@ final class CraftRecipeAutoStackRequestAction extends ItemStackRequestAction{
 	public function write(PacketSerializer $out) : void{
 		$out->writeGenericTypeNetworkId($this->recipeId);
 		$out->putByte($this->repetitions);
-		$out->putByte(count($this->ingredients));
-		foreach($this->ingredients as $ingredient){
-			$out->putRecipeIngredient($ingredient);
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_40){
+			$out->putByte(count($this->ingredients));
+			foreach($this->ingredients as $ingredient){
+				$out->putRecipeIngredient($ingredient);
+			}
 		}
 	}
 }

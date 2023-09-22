@@ -86,8 +86,10 @@ final class ItemStackRequest{
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
 			$filterStrings[] = $in->getString();
 		}
-		$filterStringCause = $in->getLInt();
-		return new self($requestId, $actions, $filterStrings, $filterStringCause);
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_30){
+			$filterStringCause = $in->getLInt();
+		}
+		return new self($requestId, $actions, $filterStrings, $filterStringCause ?? 0);
 	}
 
 	public function write(PacketSerializer $out) : void{
@@ -101,6 +103,8 @@ final class ItemStackRequest{
 		foreach($this->filterStrings as $string){
 			$out->putString($string);
 		}
-		$out->putLInt($this->filterStringCause);
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_30){
+			$out->putLInt($this->filterStringCause);
+		}
 	}
 }

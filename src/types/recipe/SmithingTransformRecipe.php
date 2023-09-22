@@ -22,7 +22,7 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 	public function __construct(
 		int $typeId,
 		private string $recipeId,
-		private RecipeIngredient $template,
+		private ?RecipeIngredient $template,
 		private RecipeIngredient $input,
 		private RecipeIngredient $addition,
 		private ItemStack $output,
@@ -48,7 +48,9 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 
 	public static function decode(int $typeId, PacketSerializer $in) : self{
 		$recipeId = $in->getString();
-		$template = $in->getRecipeIngredient();
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_80){
+			$template = $in->getRecipeIngredient();
+		}
 		$input = $in->getRecipeIngredient();
 		$addition = $in->getRecipeIngredient();
 		$output = $in->getItemStackWithoutStackId();
@@ -58,7 +60,7 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 		return new self(
 			$typeId,
 			$recipeId,
-			$template,
+			$template ?? null,
 			$input,
 			$addition,
 			$output,
@@ -69,7 +71,12 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 
 	public function encode(PacketSerializer $out) : void{
 		$out->putString($this->recipeId);
-		$out->putRecipeIngredient($this->template);
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_80){
+			if ($this->template === null) {
+				throw new \InvalidArgumentException("SmithingTransformRecipe template cannot be null");
+			}
+			$out->putRecipeIngredient($this->template);
+		}
 		$out->putRecipeIngredient($this->input);
 		$out->putRecipeIngredient($this->addition);
 		$out->putItemStackWithoutStackId($this->output);

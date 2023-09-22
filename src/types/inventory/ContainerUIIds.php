@@ -82,4 +82,26 @@ final class ContainerUIIds{
 	public const CURSOR = 59;
 	public const CREATED_OUTPUT = 60;
 	public const SMITHING_TABLE_TEMPLATE = 61;
+
+	public static function write(PacketSerializer $out, int $containerId) : void{
+		if($out->getProtocolId() < ProtocolInfo::PROTOCOL_1_19_50){
+			if($containerId > self::RECIPE_BOOK){
+				$containerId--;
+			}elseif($containerId === self::RECIPE_BOOK){
+				throw new \InvalidArgumentException("Invalid container ID for protocol version " . $out->getProtocolId());
+			}
+		}
+
+		$out->putByte($containerId);
+	}
+
+	public static function read(PacketSerializer $in) : int{
+		$containerId = $in->getByte();
+
+		if($in->getProtocolId() < ProtocolInfo::PROTOCOL_1_19_50 && $containerId >= self::RECIPE_BOOK){
+			$containerId++;
+		}
+
+		return $containerId;
+	}
 }

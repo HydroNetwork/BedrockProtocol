@@ -101,6 +101,9 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->uuid = $in->getUUID();
 		$this->username = $in->getString();
+		if($in->getProtocolId() <= ProtocolInfo::PROTOCOL_1_19_0){
+			$in->getActorUniqueId();
+		}
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->platformChatId = $in->getString();
 		$this->position = $in->getVector3();
@@ -109,12 +112,30 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$this->yaw = $in->getLFloat();
 		$this->headYaw = $in->getLFloat();
 		$this->item = ItemStackWrapper::read($in);
-		$this->gameMode = $in->getVarInt();
-		$this->metadata = $in->getEntityMetadata();
-		$this->syncedProperties = PropertySyncData::read($in);
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_18_30){
+			$this->gameMode = $in->getVarInt();
+		}
+		$this->metadata = $in->getEntityMetadata(); // TODO: convert back?
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_40){
+			$this->syncedProperties = PropertySyncData::read($in);
+		}
 
-		$this->abilitiesPacket = new UpdateAbilitiesPacket();
-		$this->abilitiesPacket->decodePayload($in);
+		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_10){
+			$this->abilitiesPacket = new UpdateAbilitiesPacket();
+			$this->abilitiesPacket->decodePayload($in);
+		}else{
+			$packet = new AdventureSettingsPacket();
+			$packet->decodePayload($in);
+
+			$abilityData = new AbilitiesData(
+				$packet->commandPermission,
+				$packet->playerPermission,
+				$packet->targetActorUniqueId,
+				[]
+			);
+
+			$this->abilitiesPacket = UpdateAbilitiesPacket::create($abilityData);
+		}
 
 		$linkCount = $in->getUnsignedVarInt();
 		for($i = 0; $i < $linkCount; ++$i){
@@ -128,6 +149,9 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUUID($this->uuid);
 		$out->putString($this->username);
+		if($out->getProtocolId() <= ProtocolInfo::PROTOCOL_1_19_0){
+			$out->putActorUniqueId($this->abilitiesPacket->getData()->getTargetActorUniqueId());
+		}
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putString($this->platformChatId);
 		$out->putVector3($this->position);
@@ -136,11 +160,27 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$out->putLFloat($this->yaw);
 		$out->putLFloat($this->headYaw);
 		$this->item->write($out);
-		$out->putVarInt($this->gameMode);
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_18_30){
+			$out->putVarInt($this->gameMode);
+		}
 		$out->putEntityMetadata($this->metadata);
-		$this->syncedProperties->write($out);
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_40){
+			$this->syncedProperties->write($out);
+		}
 
-		$this->abilitiesPacket->encodePayload($out);
+		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_10){
+			$this->abilitiesPacket->encodePayload($out);
+		}else{
+			$packet = AdventureSettingsPacket::create(
+				0,
+				$this->abilitiesPacket->getData()->getCommandPermission(),
+				0,
+				$this->abilitiesPacket->getData()->getPlayerPermission(),
+				0,
+				$this->abilitiesPacket->getData()->getTargetActorUniqueId()
+			);
+			$packet->encodePayload($out);
+		}
 
 		$out->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){
