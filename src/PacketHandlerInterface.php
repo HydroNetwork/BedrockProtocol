@@ -123,6 +123,8 @@ interface PacketHandlerInterface{
 	public function handleGuiDataPickItem(GuiDataPickItemPacket $packet) : bool;
 
 	public function handleBlockActorData(BlockActorDataPacket $packet) : bool;
+    
+    public function handleAdventureSettings(AdventureSettingsPacket $packet) : bool;
 
 	public function handlePlayerInput(PlayerInputPacket $packet) : bool;
 

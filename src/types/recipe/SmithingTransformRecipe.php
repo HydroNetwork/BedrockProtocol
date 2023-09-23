@@ -35,7 +35,7 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 
 	public function getRecipeId() : string{ return $this->recipeId; }
 
-	public function getTemplate() : RecipeIngredient|null{ return $this->template; }
+	public function getTemplate() : ?RecipeIngredient{ return $this->template; }
 
 	public function getInput() : RecipeIngredient{ return $this->input; }
 

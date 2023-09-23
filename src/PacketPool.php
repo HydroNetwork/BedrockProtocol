@@ -46,6 +46,7 @@ class PacketPool{
 		$this->registerPacket(new StartGamePacket());
 		$this->registerPacket(new AddPlayerPacket());
 		$this->registerPacket(new AddActorPacket());
+		$this->registerPacket(new AdventureSettingsPacket());
 		$this->registerPacket(new RemoveActorPacket());
 		$this->registerPacket(new AddItemActorPacket());
 		$this->registerPacket(new TakeItemActorPacket());
