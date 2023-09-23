@@ -21,6 +21,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\MetadataProperty;
 use pocketmine\network\mcpe\protocol\types\entity\PropertySyncData;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
+use pocketmine\network\mcpe\protocol\UpdateAdventureSettingsPacket;
+use pocketmine\network\mcpe\protocol\types\AbilitiesData;
 use Ramsey\Uuid\UuidInterface;
 use function count;
 
@@ -124,7 +126,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 			$this->abilitiesPacket = new UpdateAbilitiesPacket();
 			$this->abilitiesPacket->decodePayload($in);
 		}else{
-			$packet = new AdventureSettingsPacket();
+			$packet = new UpdateAdventureSettingsPacket();
 			$packet->decodePayload($in);
 
 			$abilityData = new AbilitiesData(

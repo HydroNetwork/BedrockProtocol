@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol\types\recipe;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 
 final class SmithingTransformRecipe extends RecipeWithTypeId{
 
@@ -34,7 +35,7 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 
 	public function getRecipeId() : string{ return $this->recipeId; }
 
-	public function getTemplate() : RecipeIngredient{ return $this->template; }
+	public function getTemplate() : RecipeIngredient|null{ return $this->template; }
 
 	public function getInput() : RecipeIngredient{ return $this->input; }
 

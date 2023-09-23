@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
+
 final class ContainerUIIds{
 
 	private function __construct(){
