@@ -16,9 +16,7 @@
         "phpstan/phpstan": "1.10.33",
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpstan/phpstan-strict-rules": "^1.0.0",
-        "phpunit/phpunit": "^9.5",
-        "hydronetwork/hydronet": "dev-stable",
-        "hydronetwork/bedrock-data": "dev-master"
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
@@ -36,15 +34,5 @@
     },
     "scripts": {
         "update-create-methods": "@php tools/generate-create-static-methods.php"
-    },
-    "repositories": [
-      {
-         "type": "vcs",
-         "url":  "git@github.com:hydronetwork/BedrockData.git"
-      },
-      {
-         "type": "vcs",
-         "url":  "git@github.com:hydronetwork/HydroNet.git"
-      }
-   ]
+    }
 }
