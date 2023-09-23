@@ -126,7 +126,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 			$this->abilitiesPacket = new UpdateAbilitiesPacket();
 			$this->abilitiesPacket->decodePayload($in);
 		}else{
-			$packet = new UpdateAdventureSettingsPacket();
+			$packet = new AdventureSettingsPacket();
 			$packet->decodePayload($in);
 
 			$abilityData = new AbilitiesData(

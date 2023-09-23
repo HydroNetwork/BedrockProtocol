@@ -800,7 +800,7 @@ class PacketSerializer extends BinaryStream{
 
 		$result->structureBlockType = $this->getVarInt();
 		$result->structureSettings = $this->getStructureSettings($protocolId);
-		$result->structureRedstoneSaveMove = $this->getVarInt();
+		$result->structureRedstoneSaveMode = $this->getVarInt();
 
 		return $result;
 	}
