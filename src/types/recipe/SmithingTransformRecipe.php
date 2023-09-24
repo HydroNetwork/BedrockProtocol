@@ -23,7 +23,7 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 	public function __construct(
 		int $typeId,
 		private string $recipeId,
-		private ?RecipeIngredient $template,
+		private RecipeIngredient $template,
 		private RecipeIngredient $input,
 		private RecipeIngredient $addition,
 		private ItemStack $output,
