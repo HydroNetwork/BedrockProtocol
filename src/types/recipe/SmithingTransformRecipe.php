@@ -72,9 +72,6 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 	public function encode(PacketSerializer $out) : void{
 		$out->putString($this->recipeId);
 		if($out->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_80){
-			if (is_null($this->template)) {
-				throw new \InvalidArgumentException("SmithingTransformRecipe template cannot be null");
-			}
 			$out->putRecipeIngredient($this->template);
 		}
 		$out->putRecipeIngredient($this->input);
