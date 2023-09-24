@@ -49,9 +49,7 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 
 	public static function decode(int $typeId, PacketSerializer $in) : self{
 		$recipeId = $in->getString();
-		if($in->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_80){
-			$template = $in->getRecipeIngredient();
-		}
+        $template = $in->getRecipeIngredient();
 		$input = $in->getRecipeIngredient();
 		$addition = $in->getRecipeIngredient();
 		$output = $in->getItemStackWithoutStackId();
