@@ -17,7 +17,6 @@ namespace pocketmine\network\mcpe\protocol\types\recipe;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
-use function is_null;
 
 final class SmithingTransformRecipe extends RecipeWithTypeId{
 
